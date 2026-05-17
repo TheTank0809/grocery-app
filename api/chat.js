@@ -48,11 +48,17 @@ Place order ONLY on clear YES/haan/ha. Never place without confirmation. Never a
         max_tokens: 1024,
         system: SYSTEM,
         messages,
+        mcp_servers: [
+          {
+            type: 'url',
+            url: 'https://mcp.swiggy.com/im',
+            name: 'instamart',
+          }
+        ],
         tools: [
           {
             type: 'mcp_toolset',
-            server_name: 'instamart',
-            server_url: 'https://mcp.swiggy.com/im',
+            mcp_server_name: 'instamart',
           }
         ]
       }),
