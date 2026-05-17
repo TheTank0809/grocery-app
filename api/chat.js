@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 Personality: simple warm friendly language, patient, use Hindi/Hinglish if user does, short responses, use emojis like ✅ ❌ 🛒.
 
 When user asks for a product:
-1. Search Instamart immediately.
+1. Use the instamart search tool to search Instamart immediately.
 2. Show TOP 5 results numbered:
    1️⃣ Amul Milk 500ml — ₹28 | 500 ml
    2️⃣ Mother Dairy Milk 500ml — ₹30 | 500 ml
@@ -48,7 +48,16 @@ Place order ONLY on clear YES/haan/ha. Never place without confirmation. Never a
         max_tokens: 1024,
         system: SYSTEM,
         messages,
-        mcp_servers: [{ type: 'url', url: 'https://mcp.swiggy.com/im', name: 'instamart' }],
+        tools: [
+          {
+            type: 'mcp',
+            name: 'instamart',
+            url: 'https://mcp.swiggy.com/im',
+            tool_configuration: {
+              enabled: true
+            }
+          }
+        ]
       }),
     });
 
@@ -57,7 +66,7 @@ Place order ONLY on clear YES/haan/ha. Never place without confirmation. Never a
     try { data = JSON.parse(text); }
     catch { return res.status(502).json({ error: `Unexpected response: ${text.slice(0, 200)}` }); }
 
-    if (!upstream.ok) return res.status(upstream.status).json({ error: data.error?.message || 'Anthropic error' });
+    if (!upstream.ok) return res.status(upstream.status).json({ error: data.error?.message || `Anthropic error: ${JSON.stringify(data)}` });
     return res.status(200).json(data);
 
   } catch (err) {
