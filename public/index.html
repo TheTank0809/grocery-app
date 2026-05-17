@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Grocery Order">
+<meta name="theme-color" content="#ff6b35">
+<title>Grocery Order</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--or:#ff6b35;--ord:#e85520;--orl:#fff3ee;--tx:#1a1a1a;--txm:#666;--bg:#fafaf8;--bd:#e8e0d8}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Hind',sans-serif;color:var(--tx);-webkit-tap-highlight-color:transparent}
+#app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;background:var(--bg)}
+#hdr{background:var(--or);padding:14px 18px 12px;display:flex;align-items:center;gap:12px;flex-shrink:0;box-shadow:0 2px 8px rgba(255,107,53,.3)}
+#hic{width:42px;height:42px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+#htx h1{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;color:#fff;line-height:1.1}
+#htx p{font-size:12px;color:rgba(255,255,255,.85);font-weight:500;margin-top:1px}
+#dot{width:8px;height:8px;background:#4ade80;border-radius:50%;margin-left:auto;flex-shrink:0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.4)}50%{box-shadow:0 0 0 5px rgba(255,255,255,.1)}}
+#msgs{flex:1;overflow-y:auto;padding:16px 14px 8px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
+#msgs::-webkit-scrollbar{display:none}
+.msg{display:flex;flex-direction:column;max-width:85%;animation:fu .25s ease}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg.u{align-self:flex-end;align-items:flex-end}
+.msg.b{align-self:flex-start;align-items:flex-start}
+.bbl{padding:12px 16px;border-radius:20px;font-size:16px;line-height:1.55;word-break:break-word;white-space:pre-wrap}
+.msg.u .bbl{background:var(--or);color:#fff;border-bottom-right-radius:4px;font-weight:500}
+.msg.b .bbl{background:#fff;color:var(--tx);border-bottom-left-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid var(--bd)}
+.mt{font-size:11px;color:var(--txm);margin-top:3px;padding:0 4px}
+.sep{text-align:center;font-size:12px;color:var(--txm);background:var(--bd);border-radius:10px;padding:3px 10px;align-self:center;margin:4px 0}
+#typ{display:none;padding:0 14px 6px;flex-shrink:0}
+#typ.on{display:block;animation:fu .2s ease}
+.tb{background:#fff;border:1px solid var(--bd);border-radius:20px;border-bottom-left-radius:4px;padding:14px 18px;box-shadow:0 2px 12px rgba(0,0,0,.08);display:inline-flex;gap:5px;align-items:center}
+.d{width:8px;height:8px;background:var(--or);border-radius:50%;opacity:.4;animation:b 1.2s infinite}
+.d:nth-child(2){animation-delay:.2s}.d:nth-child(3){animation-delay:.4s}
+@keyframes b{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+#qr{display:flex;gap:8px;padding:6px 14px 2px;overflow-x:auto;flex-shrink:0}
+#qr::-webkit-scrollbar{display:none}
+.qb{background:var(--orl);color:var(--ord);border:1.5px solid rgba(255,107,53,.25);border-radius:20px;padding:8px 14px;font-size:14px;font-family:'Hind',sans-serif;font-weight:600;white-space:nowrap;cursor:pointer;flex-shrink:0}
+.qb:active{background:var(--or);color:#fff}
+#ibar{display:flex;align-items:flex-end;gap:10px;padding:10px 14px calc(14px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--bd);flex-shrink:0}
+#inp{flex:1;background:var(--bg);border:1.5px solid var(--bd);border-radius:24px;padding:11px 16px;font-size:16px;font-family:'Hind',sans-serif;color:var(--tx);resize:none;outline:none;max-height:120px;line-height:1.4;transition:border-color .2s;-webkit-appearance:none}
+#inp:focus{border-color:var(--or)}
+#inp::placeholder{color:#aaa}
+#snd{width:46px;height:46px;background:var(--or);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(255,107,53,.35)}
+#snd:active{transform:scale(.92)}
+#snd:disabled{background:#ddd;box-shadow:none;cursor:default}
+#snd svg{width:20px;height:20px;fill:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hdr">
+    <div id="hic">🛒</div>
+    <div id="htx"><h1>Grocery Order</h1><p>Swiggy Instamart • Cash on Delivery</p></div>
+    <div id="dot"></div>
+  </div>
+  <div id="msgs"><div class="sep">Today</div></div>
+  <div id="typ"><div class="tb"><div class="d"></div><div class="d"></div><div class="d"></div></div></div>
+  <div id="qr">
+    <button class="qb" onclick="sq('I need milk and bread')">🥛 Milk &amp; bread</button>
+    <button class="qb" onclick="sq('I need vegetables')">🥦 Vegetables</button>
+    <button class="qb" onclick="sq('Show me my cart')">🛒 My cart</button>
+    <button class="qb" onclick="sq('YES place the order')">✅ Place order</button>
+    <button class="qb" onclick="sq('Cancel, start over')">❌ Cancel</button>
+  </div>
+  <div id="ibar">
+    <textarea id="inp" rows="1" placeholder="Type what you need..." oninput="ar(this)" onkeydown="kd(event)"></textarea>
+    <button id="snd" onclick="send()" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+  </div>
+</div>
+<script>
+let hist=[],busy=false;
+const ts=()=>new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const sd=()=>{const m=document.getElementById('msgs');setTimeout(()=>m.scrollTop=m.scrollHeight,60)};
+function addMsg(text,cls){
+  const d=document.createElement('div');
+  d.className='msg '+cls;
+  d.innerHTML=`<div class="bbl">${esc(text)}</div><div class="mt">${ts()}</div>`;
+  document.getElementById('msgs').appendChild(d);sd();
+}
+function setTyp(on){
+  document.getElementById('typ').classList.toggle('on',on);
+  document.getElementById('snd').disabled=on;
+  if(on)sd();
+}
+function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px'}
+function kd(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+function sq(t){document.getElementById('inp').value=t;send();}
+async function send(){
+  if(busy)return;
+  const inp=document.getElementById('inp');
+  const text=inp.value.trim();
+  if(!text)return;
+  inp.value='';inp.style.height='auto';
+  addMsg(text,'u');
+  hist.push({role:'user',content:text});
+  busy=true;setTyp(true);
+  try{
+    const res=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:hist})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Error '+res.status);
+    let reply='';
+    for(const b of(data.content||[]))if(b.type==='text')reply+=b.text;
+    if(!reply)reply='I had a little trouble. Please try again 🙏';
+    hist.push({role:'assistant',content:data.content||reply});
+    setTyp(false);addMsg(reply,'b');
+  }catch(err){
+    setTyp(false);addMsg('⚠️ '+(err.message||'Something went wrong. Please try again.'),'b');
+  }
+  busy=false;
+}
+window.addEventListener('load',()=>{
+  addMsg("Namaste! 🙏 I'm your grocery helper.\n\nTell me what you need and I'll find it on Instamart.\n\nYou can say things like:\n• \"I need tomatoes and milk\"\n• \"Get me Amul butter 500g\"\n• \"Show my cart\"",'b');
+  if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{document.getElementById('app').style.height=window.visualViewport.height+'px';});
+});
+</script>
+</body>
+</html>
