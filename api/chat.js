@@ -50,12 +50,9 @@ Place order ONLY on clear YES/haan/ha. Never place without confirmation. Never a
         messages,
         tools: [
           {
-            type: 'mcp',
-            name: 'instamart',
-            url: 'https://mcp.swiggy.com/im',
-            tool_configuration: {
-              enabled: true
-            }
+            type: 'mcp_toolset',
+            server_name: 'instamart',
+            server_url: 'https://mcp.swiggy.com/im',
           }
         ]
       }),
@@ -64,7 +61,7 @@ Place order ONLY on clear YES/haan/ha. Never place without confirmation. Never a
     const text = await upstream.text();
     let data;
     try { data = JSON.parse(text); }
-    catch { return res.status(502).json({ error: `Unexpected response: ${text.slice(0, 200)}` }); }
+    catch { return res.status(502).json({ error: `Unexpected response: ${text.slice(0, 300)}` }); }
 
     if (!upstream.ok) return res.status(upstream.status).json({ error: data.error?.message || `Anthropic error: ${JSON.stringify(data)}` });
     return res.status(200).json(data);
